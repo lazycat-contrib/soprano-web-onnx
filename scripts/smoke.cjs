@@ -24,6 +24,7 @@ const server = spawn('python3', ['-m','http.server','8765','--bind','127.0.0.1',
       await new Promise(resolve => setTimeout(resolve, 100));
     }
     console.log('Opening packaged Release page');
+    browser('set','viewport','1440','1200');
     browser('open','http://127.0.0.1:8765/');
     browser('wait','--fn',"['Ready','Init Error'].includes(document.querySelector('#stat-status')?.textContent)");
     assert.equal(browser('eval',"document.querySelector('#stat-status').textContent").result,'Ready');
@@ -48,7 +49,8 @@ const server = spawn('python3', ['-m','http.server','8765','--bind','127.0.0.1',
     browser('click','#device-cpu');
     browser('fill','#text-input','Hello.');
     console.log('Generating PCM on CPU/WASM');
-    browser('click','#generate-btn');
+    assert.equal(browser('eval',"document.querySelector('#text-input').value").result,'Hello.');
+    browser('eval',"document.querySelector('#generate-btn').click(); true");
     const started = browser('eval',`new Promise(resolve => {
       const deadline = Date.now()+10000;
       const timer = setInterval(() => {
