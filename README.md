@@ -28,3 +28,5 @@
 官方商店始终禁用。喵喵商店凭据来自组织授权的 `APPSTORE_URL`、`APPSTORE_TOKEN`，以及可选的 `PRIVATE_STORE_GROUP_CODES` Secrets；仓库不保存凭据。
 
 包名：`community.lazycat.app.sopranowebonnx`。Logo 由用户提供；上游 Apache-2.0 许可证和浏览器运行库许可证随包保留。
+
+上游 v0.1.0 的源码归档未包含 LICENSE 文件；打包时从上游固定文档提交 `f7beaba96dcdb8b0492272fcb3a14ce2fc370da3` 补入 Apache-2.0 许可证文本，不替换 Release 的应用源码。

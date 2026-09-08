@@ -14,8 +14,16 @@ web = Path('content/web')
 if web.exists():
     shutil.rmtree(web)
 web.mkdir(parents=True)
-for name in ('index.html', 'style.css', 'onnx-streaming.js', 'PCMPlayerWorklet.js', 'LICENSE'):
+for name in ('index.html', 'style.css', 'onnx-streaming.js', 'PCMPlayerWorklet.js', 'README.md'):
     shutil.copy2(source / name, web / name)
+if (source / 'LICENSE').exists():
+    shutil.copy2(source / 'LICENSE', web / 'LICENSE')
+else:
+    # v0.1.0 declares Apache-2.0 in README but omitted the license text.
+    # Fetch the upstream-added license from an immutable documentation commit.
+    subprocess.run(['curl', '--fail', '--location', '--retry', '3',
+        'https://raw.githubusercontent.com/KevinAHM/soprano-web-onnx/f7beaba96dcdb8b0492272fcb3a14ce2fc370da3/LICENSE',
+        '-o', str(web / 'LICENSE')], check=True)
 shutil.copytree(source / 'models/soprano-tokenizer', web / 'models/soprano-tokenizer')
 for asset in lock['assets']:
     if not re.fullmatch(r'soprano_(backbone_kv|decoder)\.onnx(\.data)?', asset['name']):
