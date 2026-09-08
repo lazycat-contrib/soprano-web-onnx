@@ -7,7 +7,7 @@ const env = {
   AGENT_BROWSER_SESSION: `soprano-${process.env.GITHUB_RUN_ID || process.pid}`,
   AGENT_BROWSER_EXECUTABLE_PATH: '/usr/bin/google-chrome',
   AGENT_BROWSER_ALLOWED_DOMAINS: '127.0.0.1',
-  AGENT_BROWSER_DEFAULT_TIMEOUT: '30000',
+  AGENT_BROWSER_DEFAULT_TIMEOUT: '240000',
 };
 function browser(...args) {
   const output = execFileSync(cli, ['--json', ...args], {env, encoding:'utf8', timeout:270000});
@@ -40,7 +40,6 @@ const server = spawn('python3', ['-m','http.server','8765','--bind','127.0.0.1',
     browser('click','#device-cpu');
     browser('fill','#text-input','Hello.');
     console.log('Generating PCM on CPU/WASM');
-    env.AGENT_BROWSER_DEFAULT_TIMEOUT = '240000';
     browser('click','#generate-btn');
     browser('wait','--fn',"['Finished','Error'].includes(document.querySelector('#stat-status')?.textContent)");
     const proof = browser('eval',`({status:document.querySelector('#stat-status').textContent, model:document.querySelector('.model-status__text').textContent, audio:window.__audioProof, external:performance.getEntriesByType('resource').map(x=>x.name).filter(x=>/^https?:/.test(x)&&new URL(x).origin!==location.origin)})`).result;
