@@ -5,7 +5,7 @@ if [[ "${GITHUB_ACTIONS:-}" != true ]]; then
   echo 'Release downloads and LPK preparation run only in GitHub Actions.' >&2
   exit 1
 fi
-npm ci --ignore-scripts --omit=optional --no-audit --no-fund
+npm ci --ignore-scripts --omit=optional --omit=dev --no-audit --no-fund
 work=$(mktemp -d)
 trap 'rm -rf "$work"' EXIT
 commit=$(python3 -c 'import json; print(json.load(open("upstream.json"))["commit"])')
@@ -15,4 +15,3 @@ curl --fail --location --retry 3 "https://codeload.github.com/KevinAHM/soprano-w
 mkdir "$work/source"
 tar -xzf "$work/source.tar.gz" --strip-components=1 -C "$work/source"
 python3 scripts/prepare.py "$work/source"
-node scripts/smoke.cjs

@@ -6,7 +6,7 @@
 
 ## 使用
 
-通过微服的 HTTPS 应用入口打开，建议使用新版 Chrome 或 Edge。选择 CPU/WASM，输入英文并点击 Generate Audio。首次生成会从微服加载约 378 MB 模型到浏览器，速度取决于客户端的内存和处理器。WebGPU 是上游保留的可选入口，其可用性取决于客户端显卡与浏览器；打包流程验证 CPU/WASM。
+通过微服的 HTTPS 应用入口打开，建议使用新版 Chrome 或 Edge。选择 CPU/WASM，输入英文并点击 Generate Audio。首次生成会从微服加载约 378 MB 模型到浏览器，速度取决于客户端的内存和处理器。WebGPU 是上游保留的可选入口，其可用性取决于客户端显卡与浏览器；CPU/WASM 是推荐使用方式，浏览器端合成尚未完成验证。
 
 ## 来源与版本
 
@@ -16,8 +16,10 @@
 2. 下载该 Release 对应提交的 Source code 源码归档。
 3. 下载同一个 Release 的三个 ONNX 模型附件，核对 Release SHA256、文件长度及源码中的 LFS 指针。
 4. 从 npm 锁文件安装固定版本的 ONNX Runtime Web 和 Transformers.js，将浏览器运行库放入静态目录。移除外部字体请求，保留页面的字体回退。
-5. 在 GitHub Runner 的 Chrome 中实际合成英文，确认生成非静音 PCM，且没有外部资源请求；测试通过后制作 LPK。
+5. 校验本地模块依赖和模型内容，使用 LazyCat 工具构建并验证 LPK。
 6. 上传版本化 GitHub Release 安装包，并把其 URL 和 SHA256 提交给喵喵商店。
+
+本次发布条件按用户要求采用源码、模型和 LPK 构建校验。`scripts/smoke.cjs` 保留为可选浏览器排错脚本，不由发布流程调用；当前不宣称已完成浏览器试听或 WebGPU 验证。
 
 `upstream.json` 锁定 Release tag、源码提交和模型摘要。**包版本与 tag 跟随上游最新 Release**：上游 `v0.1.0` → 包版本 `0.1.0` → 本仓库 tag `v0.1.0`，不自行递增补丁版本。已存在的同版本 Release 内容发生变化时会停止，避免覆盖已发布安装包。
 
