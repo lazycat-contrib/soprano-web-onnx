@@ -1,0 +1,26 @@
+version: 1
+project:
+  root: .
+  build_config: lzc-build.yml
+  package_file: package.yml
+  output: .lazycat-build/application.lpk
+  target_arch: amd64
+update:
+  strategy: publish
+  allow_downgrade: false
+  version_source:
+    type: git
+build:
+  toolchains:
+    - kind: node
+      version: 24.x
+  run_buildscript: true
+images: []
+stores:
+  official:
+    enabled: false
+  private:
+    enabled: true
+    skip_if_version_exists: true
+    name: Soprano Web ONNX
+    summary: 浏览器端英语语音合成，模型与运行库内置，无需 API Key

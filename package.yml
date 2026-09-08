@@ -1,0 +1,15 @@
+package: community.lazycat.app.sopranowebonnx
+version: 0.1.0
+name: Soprano Web ONNX
+description: 在浏览器中运行的英语语音合成工具，支持流式播放，模型和运行库随应用提供，无需 API Key。
+author: KevinAHM
+license: Apache-2.0
+homepage: https://github.com/KevinAHM/soprano-web-onnx
+min_os_version: 1.5.0
+locales:
+  zh:
+    name: Soprano Web ONNX
+    description: 浏览器端英语语音合成，支持流式播放，模型与运行库随应用提供，无需 API Key。
+  en:
+    name: Soprano Web ONNX
+    description: Browser-based English text-to-speech with streaming playback, bundled ONNX models and runtimes, and no API key requirement.

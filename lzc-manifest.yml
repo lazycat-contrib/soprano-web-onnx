@@ -1,0 +1,5 @@
+application:
+  subdomain: sopranowebonnx
+  routes:
+    - /=file:///lzcapp/pkg/content/web
+usage: "建议使用新版 Chrome 或 Edge，通过 HTTPS 打开。输入英文后选择 CPU/WASM 并生成语音，首次使用会从微服加载约 378 MB 模型到浏览器，合成速度取决于访问设备。WebGPU 取决于浏览器及显卡支持。"

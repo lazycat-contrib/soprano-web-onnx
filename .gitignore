@@ -1,0 +1,5 @@
+node_modules/
+content/
+.lazycat-build/
+*.lpk
+__pycache__/

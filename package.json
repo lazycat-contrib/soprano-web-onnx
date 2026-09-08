@@ -1,0 +1,13 @@
+{
+  "name": "soprano-lazycat-packaging",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Pinned browser runtimes and packaging verification tools",
+  "dependencies": {
+    "@huggingface/transformers": "3.0.0",
+    "onnxruntime-web": "1.23.2"
+  },
+  "devDependencies": {
+    "agent-browser": "0.37.0"
+  }
+}

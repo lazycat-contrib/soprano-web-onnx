@@ -1,0 +1,26 @@
+{
+  "repository": "KevinAHM/soprano-web-onnx",
+  "tag": "v0.1.0",
+  "version": "0.1.0",
+  "commit": "0154d623d11213e149f0fb641cdf0db0723fb550",
+  "assets": [
+    {
+      "name": "soprano_backbone_kv.onnx",
+      "url": "https://github.com/KevinAHM/soprano-web-onnx/releases/download/v0.1.0/soprano_backbone_kv.onnx",
+      "sha256": "46989d2bf5615d26ed6adea563d53498ee79ce1ad33731f26ba97e5299917681",
+      "size": 319548418
+    },
+    {
+      "name": "soprano_decoder.onnx",
+      "url": "https://github.com/KevinAHM/soprano-web-onnx/releases/download/v0.1.0/soprano_decoder.onnx",
+      "sha256": "41c885da9fd3d038320fab51500fb7f53a34ef5f9e402407d86de3aefb3e3e5e",
+      "size": 292183
+    },
+    {
+      "name": "soprano_decoder.onnx.data",
+      "url": "https://github.com/KevinAHM/soprano-web-onnx/releases/download/v0.1.0/soprano_decoder.onnx.data",
+      "sha256": "b5ef3e4fe11c5eddf1b78afa10a0cecba4b8710b84b78c57b9661d7a56005a45",
+      "size": 57937920
+    }
+  ]
+}
