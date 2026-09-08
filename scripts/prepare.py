@@ -14,7 +14,7 @@ web = Path('content/web')
 if web.exists():
     shutil.rmtree(web)
 web.mkdir(parents=True)
-for name in ('index.html', 'style.css', 'onnx-streaming.js', 'PCMPlayerWorklet.js', 'README.md'):
+for name in ('index.html', 'style.css', 'onnx-streaming.js', 'PCMPlayerWorklet.js', 'EventEmitter.js', 'README.md'):
     shutil.copy2(source / name, web / name)
 if (source / 'LICENSE').exists():
     shutil.copy2(source / 'LICENSE', web / 'LICENSE')
@@ -74,6 +74,22 @@ if js.count(old) != 1:
 js = js.replace(old, './vendor/transformers/transformers.min.js')
 js = "ort.env.wasm.wasmPaths = new URL('./vendor/ort/', location.href).href;\nort.env.wasm.numThreads = 1;\n" + js
 js_path.write_text(js)
+# Walk the page entry's relative module graph and reject missing local imports.
+visited = set()
+pending = [web / 'onnx-streaming.js']
+while pending:
+    module = pending.pop().resolve()
+    if module in visited:
+        continue
+    visited.add(module)
+    if not module.is_relative_to(web.resolve()) or not module.is_file():
+        raise ValueError('Missing or unsafe module dependency: ' + str(module))
+    if 'vendor' in module.relative_to(web.resolve()).parts:
+        continue
+    text = module.read_text()
+    for _, relative in re.findall(r"(?:from\s*|import\s*\()(['\"])(\.[^'\"]+)\1", text):
+        pending.append(module.parent / relative.split('?')[0])
+print('Verified local module dependencies:', len(visited))
 shutil.copy2('upstream.json', 'content/upstream.json')
 shutil.copy2('package-lock.json', 'content/runtime-package-lock.json')
 print('Prepared Release', lock['tag'], 'with local models and runtimes')
