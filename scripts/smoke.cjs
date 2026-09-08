@@ -7,7 +7,7 @@ const env = {
   AGENT_BROWSER_SESSION: `soprano-${process.env.GITHUB_RUN_ID || process.pid}`,
   AGENT_BROWSER_EXECUTABLE_PATH: '/usr/bin/google-chrome',
   AGENT_BROWSER_ALLOWED_DOMAINS: '127.0.0.1',
-  AGENT_BROWSER_DEFAULT_TIMEOUT: '240000',
+  AGENT_BROWSER_DEFAULT_TIMEOUT: '30000',
 };
 function browser(...args) {
   const output = execFileSync(cli, ['--json', ...args], {env, encoding:'utf8', timeout:270000});
@@ -22,6 +22,7 @@ const server = spawn('python3', ['-m','http.server','8765','--bind','127.0.0.1',
       try { if ((await fetch('http://127.0.0.1:8765/')).ok) break; } catch {}
       await new Promise(resolve => setTimeout(resolve, 100));
     }
+    console.log('Opening packaged Release page');
     browser('open','http://127.0.0.1:8765/');
     browser('wait','--fn',"['Ready','Init Error'].includes(document.querySelector('#stat-status')?.textContent)");
     assert.equal(browser('eval',"document.querySelector('#stat-status').textContent").result,'Ready');
@@ -38,6 +39,8 @@ const server = spawn('python3', ['-m','http.server','8765','--bind','127.0.0.1',
     })()`);
     browser('click','#device-cpu');
     browser('fill','#text-input','Hello.');
+    console.log('Generating PCM on CPU/WASM');
+    env.AGENT_BROWSER_DEFAULT_TIMEOUT = '240000';
     browser('click','#generate-btn');
     browser('wait','--fn',"['Finished','Error'].includes(document.querySelector('#stat-status')?.textContent)");
     const proof = browser('eval',`({status:document.querySelector('#stat-status').textContent, model:document.querySelector('.model-status__text').textContent, audio:window.__audioProof, external:performance.getEntriesByType('resource').map(x=>x.name).filter(x=>/^https?:/.test(x)&&new URL(x).origin!==location.origin)})`).result;
@@ -48,7 +51,11 @@ const server = spawn('python3', ['-m','http.server','8765','--bind','127.0.0.1',
     mkdirSync('.lazycat-build',{recursive:true});
     browser('screenshot','.lazycat-build/browser-smoke.png');
   } catch (error) {
-    try { console.error('Browser errors:',JSON.stringify(browser('errors'))); console.error('Page:',JSON.stringify(browser('snapshot'))); } catch {}
+    for (const args of [
+      ['errors'], ['console'], ['eval', "({state:document.readyState, ort:typeof ort, scripts:[...document.scripts].map(s=>s.src), resources:performance.getEntriesByType('resource').map(r=>({name:r.name,status:r.responseStatus,size:r.transferSize}))})"], ['snapshot']
+    ]) {
+      try { console.error('Browser diagnostic ' + args[0] + ':',JSON.stringify(browser(...args))); } catch (diagnosticError) { console.error(String(diagnosticError)); }
+    }
     throw error;
   } finally {
     try { browser('close'); } finally { server.kill(); }
